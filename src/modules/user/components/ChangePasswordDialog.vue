@@ -1,25 +1,31 @@
 <script setup lang="ts">
 import ModelDialog from '@/components/ui/ModelDialog.vue'
-import { ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import Form from '@/helpers/Form.ts'
 import { useUserStore } from '@/entities/user/store/UserStore.ts'
 
 const props = defineProps({
   dialog: {
     type: Boolean,
-    required: true,
+    required: true
   },
   userId: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const userStore = useUserStore()
 const form = useTemplateRef('form')
 const emit = defineEmits(['finished'])
 const password = ref('')
+const confirmPassword = ref('')
 const loading = ref(false)
+
+const confirmPasswordRules = computed(() => [
+    Form.validationRules.required,
+  v => v === password.value || 'Les mots de passe ne correspondent pas'
+])
 
 async function changePassword() {
   if (form.value.validate()) {
@@ -27,6 +33,7 @@ async function changePassword() {
     await userStore.changePassword(props.userId, password.value)
     loading.value = false
     emit('finished')
+    password.value = ''
   }
 }
 </script>
@@ -42,7 +49,15 @@ async function changePassword() {
       <v-text-field
         label="Entrer le nouveau mot de passe"
         v-model="password"
-        :rules="[Form.validationRules.required]"
+        type="password"
+        :rules="[Form.validationRules.required, ...Form.validationRules.passwordRules]"
+      />
+
+      <v-text-field
+        label="Confirmer le nouveau mot de passe"
+        v-model="confirmPassword"
+        type="password"
+        :rules="confirmPasswordRules"
       />
     </v-form>
     <template #footer>

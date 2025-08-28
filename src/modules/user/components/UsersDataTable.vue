@@ -3,11 +3,12 @@ import DataTable from '@/components/ui/DataTable.vue'
 import { useUserStore } from '@/entities/user/store/UserStore.ts'
 import User from '@/entities/user/models/User.ts'
 import EditUserDialog from '@/modules/user/components/EditUserDialog.vue'
-import { onMounted, reactive, ref } from 'vue'
+import { inject, onMounted, reactive, ref } from 'vue'
 import { useRoleStore } from '@/entities/user/store/RoleStore.ts'
 import DeleteUserDialog from '@/modules/user/components/DeleteUserDialog.vue'
 import ChangePasswordDialog from '@/modules/user/components/ChangePasswordDialog.vue'
 
+const showSuccess = inject("showSuccess")
 const userStore = useUserStore()
 const roleStore = useRoleStore()
 const headers = [
@@ -56,6 +57,7 @@ function showChangePasswordDialog(user: User) {
 function handleSaveEvent() {
   dialogs.edit = false
   tableKey.value++
+  showSuccess("Enregistrement éffectuée avec succès")
 }
 
 function showDeleteUser(user: User) {
@@ -66,6 +68,12 @@ function showDeleteUser(user: User) {
 function handleDeletedEvent() {
   dialogs.delete = false
   tableKey.value++
+  showSuccess("Suppression éffectuée avec succès")
+}
+
+function handleChangePassword() {
+  dialogs.changePassword = false
+  showSuccess("Mot de pass modifié avec succès")
 }
 
 onMounted(async () => {
@@ -111,7 +119,7 @@ onMounted(async () => {
     v-model="dialogs.changePassword"
     :user-id="currentUser.id"
     :dialog="dialogs.edit"
-    @finished="dialogs.changePassword = false"
+    @finished="handleChangePassword"
   />
 </template>
 
