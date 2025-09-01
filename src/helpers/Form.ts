@@ -2,7 +2,7 @@ export default {
   validationRules: {
     required: value => !(!value || value.length == 0) || 'Ce champ est requis',
     passwordRules: [
-      v => v.length >= 12 || 'Minimum 12 caractères',
+      v => v.length >= 8 || 'Minimum 8 caractères',
       v => /[A-Z]/.test(v) || 'Au moins une majuscule',
       v => /[a-z]/.test(v) || 'Au moins une minuscule',
       v => /[0-9]/.test(v) || 'Au moins un chiffre',

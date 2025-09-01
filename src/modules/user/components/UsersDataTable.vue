@@ -7,16 +7,12 @@ import { inject, onMounted, reactive, ref } from 'vue'
 import { useRoleStore } from '@/entities/user/store/RoleStore.ts'
 import DeleteUserDialog from '@/modules/user/components/DeleteUserDialog.vue'
 import ChangePasswordDialog from '@/modules/user/components/ChangePasswordDialog.vue'
+import { formatDate } from '@/helpers/Utils.ts'
 
 const showSuccess = inject("showSuccess")
 const userStore = useUserStore()
 const roleStore = useRoleStore()
 const headers = [
-  {
-    title: 'ID',
-    align: 'start',
-    key: 'id',
-  },
   {
     title: "Nom d' utilisateur",
     key: 'username',
@@ -24,6 +20,10 @@ const headers = [
   {
     title: 'Roles',
     key: 'roles',
+  },
+  {
+    title: 'Date de création',
+    key: 'createdAt',
   },
   {
     title: 'Actions',
@@ -82,7 +82,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <data-table :headers="headers" :fetch-data="userStore.getPage" :model="User" :key="tableKey">
+  <data-table :headers="headers" :fetch-data="userStore.getPage" :model="User" :table-key="tableKey">
     <template #top>
       <div class="text-right">
         <v-btn color="primary" @click="showCreateUser">
@@ -93,6 +93,9 @@ onMounted(async () => {
     </template>
     <template #[`item.roles`]="{ item }">
       {{ formatRoles(item.roles) }}
+    </template>
+    <template #[`item.createdAt`]="{ item }">
+      {{ formatDate(item.createdAt) }}
     </template>
     <template #[`item.actions`]="{ item }">
       <div class="d-flex ga-4">

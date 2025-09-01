@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import dayjs from 'dayjs'
 
 export function preparePageOptions(options) {
   options.sortBy = stringifyClean(options.sortBy);
@@ -23,3 +24,7 @@ export function mapToEntity(constructor, arr) {
   return arr.map(obj => constructor(obj));
 }
 
+export function formatDate(date) {
+  if (!date) return "";
+  return dayjs(date).format('DD/MM/YYYY');
+}

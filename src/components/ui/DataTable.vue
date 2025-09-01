@@ -15,6 +15,9 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  tableKey: {
+    type: Number,
+  }
 })
 
 const itemsPerPage = ref(15)
@@ -51,6 +54,7 @@ async function loadItems(event) {
         @update:options="loadItems"
         multi-sort
         hide-default-footer
+        :key="tableKey"
       >
         <template v-for="(_, name) in $slots" v-slot:[name]="slotData">
           <slot :name="name" v-bind="slotData" />

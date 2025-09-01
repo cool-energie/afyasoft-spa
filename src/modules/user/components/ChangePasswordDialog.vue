@@ -34,6 +34,7 @@ async function changePassword() {
     loading.value = false
     emit('finished')
     password.value = ''
+    confirmPassword.value = ''
   }
 }
 </script>
@@ -61,7 +62,7 @@ async function changePassword() {
       />
     </v-form>
     <template #footer>
-      <v-btn text color="secondary" @click="$emit('update:modelValue', false)" :loading="loading">
+      <v-btn text color="secondary" @click="$emit('update:modelValue', false)" :disabled="loading">
         <v-icon>mdi-close</v-icon>
         Annuler
       </v-btn>

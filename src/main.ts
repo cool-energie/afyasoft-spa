@@ -13,7 +13,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { getContext, removeSecurityContext } from '@/helpers/Security.ts'
+import { getContext, removeSecurityContext, setAccessToken } from '@/helpers/Security.ts'
 
 axios.defaults.baseURL = 'http://localhost:8080'
 
@@ -28,12 +28,18 @@ axios.interceptors.request.use((config) => {
   return config
 })
 
-axios.interceptors.response.use(null, (err) => {
-  if(err.status === 401) {
-    removeSecurityContext()
-    router.push({name: 'login'})
-  }
-})
+axios.interceptors.response.use(
+  (response) => {
+    setAccessToken(response.headers['x-security-token'])
+    return response
+  },
+  (err) => {
+    if (err.status === 401) {
+      removeSecurityContext()
+      router.push({ name: 'login' })
+    }
+  },
+)
 const app = createApp(App)
 
 app.use(createPinia())

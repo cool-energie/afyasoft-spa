@@ -17,3 +17,10 @@ export function removeSecurityContext() {
 export function getContext() {
   return JSON.parse(localStorage.getItem('context'))
 }
+
+export function setAccessToken(accessToken: string) {
+  let context = JSON.parse(localStorage.getItem('context') as string)
+  if (!context) context = new Context()
+  context.accessToken = accessToken
+  localStorage.setItem("context", JSON.stringify(context))
+}
